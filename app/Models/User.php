@@ -6,6 +6,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+
 
 class User extends Authenticatable
 {
@@ -40,4 +42,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+    * One to many Reletionship. Every User can have one or more questions on forum
+    */
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+    /**
+    * Actually you should difine the mutator in Question model. I'll fix that in the next lesson.
+    */
+
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = Str::slug($value, '-');
+
+    }
 }
